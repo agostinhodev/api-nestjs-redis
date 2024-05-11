@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  api-development:
+    container_name: api-development
+    image: api/backend:development
+    restart: always
+    build:
+      context: ./docker/node
+      dockerfile: Dockerfile
+      target: development
+    command: sh -c "[ ! -d node_modules ] && yarn install --no-cache --ignore-platform; yarn start:dev"
+    ports:
+      - 80:3000
+    networks:
+      api-network-development:
+        ipv4_address: 172.40.0.3
+    volumes:
+      - ./:/usr/src/app
+    mem_limit: 2g
+
+volumes:
+  api-database:
+    driver: local
+    name: api-database
+
+networks:
+  api-network-development:
+    driver: bridge
+    name: api-network-development
+    ipam:
+      config:
+        - subnet: 172.40.0.0/28
