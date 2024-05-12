@@ -1,4 +1,4 @@
-# Redis API with NestJS
+# NestJS API + Redis Integration
 
 ## Introduction
 
