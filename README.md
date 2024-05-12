@@ -11,6 +11,10 @@
 - **Docker**: A platform for developing, shipping, and running applications inside lightweight containers.
 - **Redis**: An open-source (BSD licensed), in-memory data structure store, used as a database, cache, and message broker.
 
+## NPM Packages
+- **@nestjs-modules/ioredis** Check it out [here](https://www.npmjs.com/package/@nestjs-modules/ioredis)
+- **ioredis** Check more info about it [here](https://www.npmjs.com/package/ioredis)
+
 ## Getting Started
 
 ### Prerequisites
@@ -33,13 +37,18 @@
    cd api-nestjs-redis
    ```
 
-3. Rename the `.env.example` file to `.env` to set up the environment variables.
+3. Rename the `.env.example` file to `.env` to set up the environment variables, byt running:
+    ```bash
+    mv .env.example .env
+    ```
 
 4. Start the Docker containers:
 
    ```bash
    docker-compose -f docker-compose.yml up -d --build
    ```
+
+  - It may take some time, as it will install all the necessary node modules.
 
 5. After the containers are up, the API will be available at `http://localhost`.
 
