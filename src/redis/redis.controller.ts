@@ -53,6 +53,18 @@ export class RedisController {
     return JSON.parse(value);
   }
 
+  @Delete('flushall')
+  async flushAll() {
+    try {
+      const result = await this.redisService.flushAll();
+      return { message: `Redis flush all result: ${result}` };
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to flush all data from Redis',
+      );
+    }
+  }
+
   @Delete(':key')
   async delete(@Param('key') key: string) {
     const value = await this.redisService.getValue(key);
@@ -66,7 +78,5 @@ export class RedisController {
       );
     }
     return { message: `Key '${key}' deleted successfully` };
-
-    return JSON.parse(value);
   }
 }

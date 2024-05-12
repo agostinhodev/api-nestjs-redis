@@ -23,6 +23,11 @@ export class RedisService {
   }
 
   async delete(key: string) {
-    return await this.redisClient.del(key);
+    const result = await this.redisClient.del(key);
+    return result > 0;
+  }
+
+  async flushAll(): Promise<string> {
+    return await this.redisClient.flushall();
   }
 }
