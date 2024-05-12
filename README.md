@@ -37,7 +37,7 @@
    cd api-nestjs-redis
    ```
 
-3. Rename the `.env.example` file to `.env` to set up the environment variables, byt running:
+3. Rename the `.env.example` file to `.env` to set up the environment variables, by running:
     ```bash
     mv .env.example .env
     ```
