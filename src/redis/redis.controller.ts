@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   InternalServerErrorException,
   NotFoundException,
@@ -48,6 +49,23 @@ export class RedisController {
     const value = await this.redisService.getValue(key);
 
     if (!value) throw new NotFoundException(`The key '${key}' not found`);
+
+    return JSON.parse(value);
+  }
+
+  @Delete(':key')
+  async delete(@Param('key') key: string) {
+    const value = await this.redisService.getValue(key);
+
+    if (!value) throw new NotFoundException(`The key '${key}' not found`);
+
+    const wasDeleted = await this.redisService.delete(key);
+    if (!wasDeleted) {
+      throw new NotFoundException(
+        `Key '${key}' not found or could not be deleted`,
+      );
+    }
+    return { message: `Key '${key}' deleted successfully` };
 
     return JSON.parse(value);
   }

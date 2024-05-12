@@ -21,4 +21,8 @@ export class RedisService {
   async getAllKeys(pattern: string = '*'): Promise<string[]> {
     return await this.redisClient.keys(pattern);
   }
+
+  async delete(key: string) {
+    return await this.redisClient.del(key);
+  }
 }
