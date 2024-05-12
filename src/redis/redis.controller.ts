@@ -3,7 +3,10 @@ import {
   Controller,
   Get,
   InternalServerErrorException,
+  NotFoundException,
+  Param,
   Post,
+  Query,
 } from '@nestjs/common';
 import { RedisService } from './redis.service';
 
@@ -28,5 +31,24 @@ export class RedisController {
 
     await this.redisService.setValue(body.key, JSON.stringify(body.value));
     return { message: 'Value set successfully' };
+  }
+
+  @Get('keys')
+  async getKeys(@Query('pattern') pattern: string) {
+    try {
+      const keys = await this.redisService.getAllKeys(pattern || '*');
+      return { keys };
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to retrieve keys');
+    }
+  }
+
+  @Get(':key')
+  async get(@Param('key') key: string) {
+    const value = await this.redisService.getValue(key);
+
+    if (!value) throw new NotFoundException(`The key '${key}' not found`);
+
+    return JSON.parse(value);
   }
 }

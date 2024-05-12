@@ -17,4 +17,8 @@ export class RedisService {
   async ping() {
     return await this.redisClient.ping();
   }
+
+  async getAllKeys(pattern: string = '*'): Promise<string[]> {
+    return await this.redisClient.keys(pattern);
+  }
 }
