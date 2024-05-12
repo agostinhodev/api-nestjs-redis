@@ -1,73 +1,115 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Redis API with NestJS
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Introduction
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+- This project provides a RESTful API for interacting with a Redis database using HTTP methods in a NestJS application.
+- It includes endpoints for basic Redis commands such as `set`, `get`, `delete`, and `ping`, as well as a command to flush all data with `flushall`. This serves as a practical demonstration of integrating Redis into a NestJS application.
 
-## Description
+## Technologies
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- **NestJS**: A progressive Node.js framework for building efficient and scalable server-side applications.
+- **Docker**: A platform for developing, shipping, and running applications inside lightweight containers.
+- **Redis**: An open-source (BSD licensed), in-memory data structure store, used as a database, cache, and message broker.
 
-## Installation
+## Getting Started
 
-```bash
-$ yarn install
-```
+### Prerequisites
 
-## Running the app
+- Docker
+- Node.js
+- Git
 
-```bash
-# development
-$ yarn run start
+### Installation
 
-# watch mode
-$ yarn run start:dev
+1. Clone the repository:
 
-# production mode
-$ yarn run start:prod
-```
+   ```bash
+   git clone https://github.com/agostinhodev/api-nestjs-redis
+   ```
 
-## Test
+2. Navigate to the project directory:
 
-```bash
-# unit tests
-$ yarn run test
+   ```bash
+   cd api-nestjs-redis
+   ```
 
-# e2e tests
-$ yarn run test:e2e
+3. Rename the `.env.example` file to `.env` to set up the environment variables.
 
-# test coverage
-$ yarn run test:cov
-```
+4. Start the Docker containers:
 
-## Support
+   ```bash
+   docker-compose -f docker-compose.yml up -d --build
+   ```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+5. After the containers are up, the API will be available at `http://localhost`.
 
-## Stay in touch
+## API Usage
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Testing Connectivity
 
-## License
+- **PING**:
+  Test the connectivity between the client and the server.
+  ```bash
+  curl --request GET --url http://localhost/redis/ping
+  ```
+  Expected Response:
+  ```json
+  { "ping": "PONG" }
+  ```
 
-Nest is [MIT licensed](LICENSE).
+### Managing Data
+
+- **SET**:
+  Store a new value in the Redis database.
+
+  ```bash
+  curl --request POST \
+    --url http://localhost/redis/set \
+    --header 'Content-Type: application/json' \
+    --data '{
+      "key": "rioDeJaneiro",
+      "value": {
+        "name": "Rio de Janeiro",
+        "country": "Brazil",
+      }
+    }'
+  ```
+
+  - **Key**: This refers to the identifier used to store and retrieve data from the Redis database. In our API, the key acts as a unique identifier for each entry. For example, the key `rioDeJaneiro` is used to access the data specific to Rio de Janeiro.
+
+  - **Value**: This represents the data associated with a key in the Redis database. The value is typically a JSON object containing the information you want to save. In the case of `rioDeJaneiro`, the value includes the JSON about Rio de Janeiro.
+
+- **GET**:
+  Retrieve a value by key.
+
+  ```bash
+  curl --request GET --url http://localhost/redis/rioDeJaneiro
+  ```
+
+- **GET ALL KEYS**:
+  Fetch all available keys in the Redis database.
+
+  ```bash
+  curl --request GET --url http://localhost/redis/keys
+  ```
+
+- **DELETE**:
+  Remove a value based on a key.
+
+  ```bash
+  curl --request DELETE --url http://localhost/redis/rioDeJaneiro
+  ```
+
+- **FLUSH ALL**:
+  Clear all data in the Redis database.
+  ```bash
+  curl --request DELETE --url http://localhost/redis/flushall
+  ```
+
+## Learning Outcomes
+
+From this project, you'll understand how Redis handles data and how it can be utilized within a NestJS application. This code serves as a reference for implementing Redis as a module within NestJS, showcasing dependency injection and module management.
+
+## Documentation
+
+For more detailed usage, check out the `/docs/InsomniaAPINestJsRedisCollection.json` file, which includes an Insomnia Collection for testing API endpoints.
