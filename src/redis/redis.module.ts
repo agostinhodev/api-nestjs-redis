@@ -1,21 +1,20 @@
-import { RedisModule as Redis } from '@nestjs-modules/ioredis';
+// redis.module.ts
+import { RedisModule } from '@nestjs-modules/ioredis';
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { RedisService } from './redis.service';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-    Redis.forRoot({
+    RedisModule.forRoot({
       url: `redis://${process.env.API_REDIS_SERVER}:${process.env.API_REDIS_PORT}`,
-      type: 'single',
+      type: 'single', // Indicates this is a single Redis instance
       options: {
-        name: process.env.API_REDIS_OPTIONS_NAME,
+        name: process.env.API_REDIS_OPTIONS_NAME, // Name used for retrieving via InjectRedis
+        // Additional Redis client options can be added here if necessary
       },
     }),
   ],
-  controllers: [],
   providers: [RedisService],
   exports: [RedisService],
 })
-export class RedisModule {}
+export class AppRedisModule {}
